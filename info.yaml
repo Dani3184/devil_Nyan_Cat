@@ -14,8 +14,9 @@ project:
   top_module: "tt_um_dual_nyancat"
 
   source_files:
-    - "hvsync_generator.v"
     - "tt_um_dual_nyancat.v"
+    - "hvsync_generator.v"
+    
 
 pinout:
   # Inputs
