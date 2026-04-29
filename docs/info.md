@@ -6,7 +6,7 @@ A real-time VGA animation of Nyan Cat, modified into a corrupted "Devil Mode" ve
 
 This project generates a hardware-based VGA animation without the need for a CPU. It utilizes a custom rendering engine designed to fit within a single Tiny Tapeout tile.
 
-- **VGA Timing Generator:** A dedicated `hvsync_generator` module produces precise horizontal (`hsync`) and vertical (`vsync`) synchronization signals, along with pixel coordinates (x, y) for a 640x480 @ 60Hz resolution.
+- **VGA Timing Generator:** A dedicated `hsync_generator` module produces precise horizontal (`hsync`) and vertical (`vsync`) synchronization signals, along with pixel coordinates (x, y) for a 640x480 @ 60Hz resolution.
 - **Rendering Engine:** The main module calculates pixel colors on the fly based on:
   - Sprite data (conceptually driven by internal logic or memory).
   - A dynamic rainbow trail animation.
