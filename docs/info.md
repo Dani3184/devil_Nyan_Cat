@@ -33,8 +33,11 @@ Run a behavioral simulation and observe the `uo_out` bus. You should see the `hs
 
 ### 2. Cocotb (Tiny Tapeout Environment)
 Run the following command in your project root:
+
 ```sh
 make -B
+``` 
+
 Check that the `hsync` and `vsync` timings remain stable and that the internal frame counter increments correctly.
 
 ### 3. Hardware Implementation
