@@ -1,47 +1,24 @@
-# Sample testbench for a Tiny Tapeout project
+![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
-This is a sample testbench for a Tiny Tapeout project. It uses [cocotb](https://docs.cocotb.org/en/stable/) to drive the DUT and check the outputs.
-See below to get started or for more information, check the [website](https://tinytapeout.com/hdl/testing/).
+# Devil Nyan Cat VGA
 
-## Setting up
+A 1x1 tile VGA Nyan Cat with integrated sound and a toggleable "Devil Mode" (palette mutation).
 
-1. Edit [Makefile](Makefile) and modify `PROJECT_SOURCES` to point to your Verilog files.
-2. Edit [tb.v](tb.v) and replace `tt_um_example` with your module name.
+- [Read the documentation for project](docs/info.md)
 
-## How to run
+![preview](docs/preview.png)
 
-To run the RTL simulation:
+## What is Tiny Tapeout?
 
-```sh
-make -B
-```
+Tiny Tapeout is an educational project that aims to make it easier and cheaper than ever to get your digital and analog designs manufactured on a real chip.
 
-To run gatelevel simulation, first harden your project and copy `../runs/wokwi/results/final/verilog/gl/{your_module_name}.v` to `gate_level_netlist.v`.
+To learn more and get started, visit https://tinytapeout.com.
 
-Then run:
+## Project Description
 
-```sh
-make -B GATES=yes
-```
+This project generates a hardware-based VGA animation of Nyan Cat. It includes a real-time color transformation engine (Devil Mode) activated via `ui_in[0]`.
 
-If you wish to save the waveform in VCD format instead of FST format, edit tb.v to use `$dumpfile("tb.vcd");` and then run:
-
-```sh
-make -B FST=
-```
-
-This will generate `tb.vcd` instead of `tb.fst`.
-
-## How to view the waveform file
-
-Using GTKWave
-
-```sh
-gtkwave tb.fst tb.gtkw
-```
-
-Using Surfer
-
-```sh
-surfer tb.fst
-```
+* **1x1 Tile:** Optimized to fit in a single tile.
+* **VGA Output:** 640x480 @ 60Hz.
+* **Audio:** 1-bit PWM audio synthesis.
+* **Compatibility:** Designed for TinyVGA Pmod.

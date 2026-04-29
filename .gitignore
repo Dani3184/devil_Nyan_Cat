@@ -1,8 +1,7 @@
 .DS_Store
 .idea
+.vscode
 *.vcd
-*.fst
-*.fst.hier
 runs
 tt_submission
 src/user_config.json
@@ -11,3 +10,5 @@ test/sim_build
 test/__pycache__/
 test/results.xml
 test/gate_level_netlist.v
+__pycache__
+tt
