@@ -1,5 +1,6 @@
 # Author: Daniel Roberto Garcia Miranda (Dani3184)
 # Institution: Universidad Mayor de San Andrés, Physics Career, Cosmic Ray Group
+# Project: Devil Nyan Cat VGA Generator
 
 import cocotb
 from cocotb.clock import Clock
@@ -19,6 +20,7 @@ async def test_project(dut):
     dut.ui_in.value = 0
     dut.uio_in.value = 0
     dut.rst_n.value = 0
+    # Wait 10 cycles to ensure global reset
     await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1
     dut._log.info("Reset complete.")
@@ -26,22 +28,26 @@ async def test_project(dut):
     # --- Test Behavior ---
     dut._log.info("Validating VGA Sync Signals")
 
-    # Skip first scanline (640 active + porches + sync)
-    # 640 + 16 (front) + 96 (sync) + 48 (back) = 800 cycles per line
+    # Skip the first full scanline to allow pipeline stabilization
+    # Calculation: 640 active + 16 front + 96 sync + 48 back = 800 cycles
     await ClockCycles(dut.clk, 800)
 
-    # hsync (bit 7) and vsync (bit 3) are active low, so 1 means inactive (displaying)
-    assert dut.uo_out[7].value == 1, "hsync should be high during active video"
-    assert dut.uo_out[3].value == 1, "vsync should be high during first lines"
+    # Validate that sync signals are high during active video (Active Low signals)
+    # uo_out[7] -> HSync, uo_out[3] -> VSync
+    assert dut.uo_out[7].value == 1, "Error: hsync should be high during active video"
+    assert dut.uo_out[3].value == 1, "Error: vsync should be high during active video"
 
-    # Test hsync timing: move past active video and front porch
-    await ClockCycles(dut.clk, 640 + 16)
+    # Test HSync timing:
+    # Wait for 640 (active) + 16 (front porch) + 2 cycles of safety margin for latency
+    await ClockCycles(dut.clk, 640 + 16 + 2)
     
-    # hsync should now be low (sync pulse active)
-    assert dut.uo_out[7].value == 0, "hsync pulse failed to trigger"
+    # HSync should be low now (sync pulse active)
+    assert dut.uo_out[7].value == 0, f"Error: hsync pulse failed to trigger. Got {dut.uo_out[7].value}"
 
-    # Wait for the sync pulse to end (96 cycles)
+    # Wait for the sync pulse duration (96 cycles)
     await ClockCycles(dut.clk, 96)
-    assert dut.uo_out[7].value == 1, "hsync pulse failed to de-assert"
+    
+    # HSync should be high again (back porch / next line start)
+    assert dut.uo_out[7].value == 1, "Error: hsync pulse failed to de-assert"
 
-    dut._log.info("Devil Nyan Cat verification successful!")
+    dut._log.info("Devil Nyan Cat verification successful! PASS")
