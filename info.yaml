@@ -6,7 +6,7 @@ project:
   description: "VGA Nyan Cat with synchronized audio and a real-time color mutation toggle (Devil Mode)."
   language: "Verilog"
   clock_hz: 25175000
-  tiles: "1x1"
+  tiles: "1x2"
   top_module: "tt_um_devil_nyancat" # Updated to match your code
 
   source_files:

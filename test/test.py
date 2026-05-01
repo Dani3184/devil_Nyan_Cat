@@ -34,8 +34,8 @@ async def test_project(dut):
 
     # Validate that sync signals are high during active video (Active Low signals)
     # uo_out[7] -> HSync, uo_out[3] -> VSync
-    assert dut.uo_out[7].value == 1, "Error: hsync should be high during active video"
-    assert dut.uo_out[3].value == 1, "Error: vsync should be high during active video"
+    assert (dut.uo_out.value >> 7) & 1 == 1, "hsync should be high"
+    assert (dut.uo_out.value >> 3) & 1 == 1, "vsync should be high"
 
     # Test HSync timing:
     # Wait for 640 (active) + 16 (front porch) + 2 cycles of safety margin for latency
