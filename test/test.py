@@ -11,7 +11,9 @@ async def test_project(dut):
     dut._log.info("Starting Devil Nyan Cat Test")
 
     # VGA Clock: ~25.175 MHz -> Period approx 39.72ns
-    clock = Clock(dut.clk, 39.72, units="ns")
+    # Use 'unit' instead of 'units' for newer cocotb versions if needed, 
+    # but let's stick to a robust way to handle it.
+    clock = Clock(dut.clk, 39.72, unit="ns")
     cocotb.start_soon(clock.start())
 
     # --- Reset Sequence ---
@@ -32,22 +34,31 @@ async def test_project(dut):
     # Calculation: 640 active + 16 front + 96 sync + 48 back = 800 cycles
     await ClockCycles(dut.clk, 800)
 
+    # We convert to .integer to avoid "unsupported operand type(s) for >>"
+    uo_val = dut.uo_out.value.integer
+
     # Validate that sync signals are high during active video (Active Low signals)
     # uo_out[7] -> HSync, uo_out[3] -> VSync
-    assert (dut.uo_out.value >> 7) & 1 == 1, "hsync should be high"
-    assert (dut.uo_out.value >> 3) & 1 == 1, "vsync should be high"
+    assert (uo_val >> 7) & 1 == 1, f"Error: hsync should be high. Got {uo_val:02x}"
+    assert (uo_val >> 3) & 1 == 1, f"Error: vsync should be high. Got {uo_val:02x}"
 
     # Test HSync timing:
     # Wait for 640 (active) + 16 (front porch) + 2 cycles of safety margin for latency
     await ClockCycles(dut.clk, 640 + 16 + 2)
     
+    # Update reading after the wait
+    uo_val = dut.uo_out.value.integer
+    
     # HSync should be low now (sync pulse active)
-    assert dut.uo_out[7].value == 0, f"Error: hsync pulse failed to trigger. Got {dut.uo_out[7].value}"
+    assert (uo_val >> 7) & 1 == 0, f"Error: hsync pulse failed to trigger. Got bit 7 = {(uo_val >> 7) & 1}"
 
     # Wait for the sync pulse duration (96 cycles)
     await ClockCycles(dut.clk, 96)
     
+    # Update reading again
+    uo_val = dut.uo_out.value.integer
+    
     # HSync should be high again (back porch / next line start)
-    assert dut.uo_out[7].value == 1, "Error: hsync pulse failed to de-assert"
+    assert (uo_val >> 7) & 1 == 1, "Error: hsync pulse failed to de-assert"
 
     dut._log.info("Devil Nyan Cat verification successful! PASS")
