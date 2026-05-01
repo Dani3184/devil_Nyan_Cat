@@ -2,8 +2,10 @@ name: fpga
 
 on:
   push:
-    # Comment out (or remove) the following line to run the FPGA workflow on every push:
-    branches: none
+    # Habilitado para que corra en cada push a la rama principal (main o master)
+    branches:
+      - main
+      - master
   workflow_dispatch:
 
 jobs:
@@ -11,9 +13,10 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
       - name: FPGA bitstream for TT ASIC Sim (ICE40UP5K)
+        # Usamos la versión ttsky26a que es la estándar para el proceso actual
         uses: TinyTapeout/tt-gds-action/fpga/ice40up5k@ttsky26a
