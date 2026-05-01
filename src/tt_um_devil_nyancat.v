@@ -111,7 +111,7 @@ module tt_um_devil_nyancat(
   wire nyanhead_y = ((nyanframe==0) | (nyanframe==1));
   wire [9:0] dwi_x = song_loops ? nyan_x - 164 + (nyanhead_x<<3) : nyan_x - 164;
   wire [9:0] dwi_y = song_loops ? 
-      (songpos < 224 ? pix_y - 240 + (nyanhead_y<<3) : pix_y + (songpos<<2) - 10'd1136) :
+      (songpos < 224 ? pix_y - 240 + (nyanhead_y<<3) : pix_y + (songpos<<2) - 11'd1136) :
       (songpos < 224 ? 480 : pix_y + 10'd908 - (songpos<<2));
   wire dwi_on = dwi_x < 96 && dwi_y < 20;
   wire [1:0] dwi = dealwithit[{dwi_y[4:2],dwi_x[6:2]}] & {2{dwi_on}};
