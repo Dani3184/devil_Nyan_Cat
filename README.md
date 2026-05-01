@@ -1,39 +1,25 @@
-# Devil Nyan Cat VGA (Tiny Tapeout)
+![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
-![](../../workflows/gds/badge.svg)
-![](../../workflows/docs/badge.svg)
-![](../../workflows/test/badge.svg)
-![](../../workflows/fpga/badge.svg)
+# tt_um_devil_nyancat
 
-## Overview
+A hardware-based VGA Nyan Cat with a cursed "Devil" palette mutation and integrated sound.
 
-This project implements a VGA animation of Nyan Cat with an additional "devil mode" visual effect and a simple PWM audio output.
+- [Read the project documentation](docs/info.md)
 
-The design is intended for Tiny Tapeout FPGA/VGA demonstrations.
+![preview](docs/preview.png)
 
-## Features
+## What is Tiny Tapeout?
 
-- VGA 640x480 output using a hardware sync generator
-- Nyan Cat animation with rainbow background
-- Devil mode (activated via `ui_in[0]`)
-  - Darkened color palette
-  - Red blinking effects
-  - Red eye highlights
-- Simple PWM audio tone output on `uio[7]`
+Tiny Tapeout is an educational project that aims to make it easier and cheaper than ever to get your digital and analog designs manufactured on a real chip. Visit https://tinytapeout.com for more info.
 
-## Hardware mapping
+## Project Description
 
-- `uo[7:0]`: VGA output signals (RGB + HSYNC + VSYNC)
-- `uio[7]`: Audio PWM output
-- `ui[0]`: Mode select (0 = normal, 1 = devil mode)
+Created by **Daniel Roberto Garcia Miranda** from the **Universidad Mayor de San Andrés**, this design is a 1x2 tile project that transforms the classic animation into a high-contrast infernal aesthetic.
 
-## Clock
+* **Devil Mode:** Real-time hardware inversion of the color channels.
+* **VGA Native:** 640x480 @ 60Hz timing generation.
+* **Audio Loop:** Synchronized 1-bit PWM audio theme.
 
-- 25 MHz target clock
-
-## Files
-
-- `tt_um_dual_nyancat.v` → main design
-- `hvsync_generator.v` → VGA timing generator
-- `tb.v` → TinyTapeout testbench
-- `tb_vivado.v` → Vivado simulation testbench
+## Author & Institution
+* **Author:** Daniel Roberto Garcia Miranda (Dani3184)
+* **Affiliation:** Cosmic Rays Group, Physics Career - UMSA, Bolivia.

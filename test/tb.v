@@ -1,13 +1,14 @@
-//Author: Daniel Roberto Garcia Miranda
-//Institution: Universidad Mayor de San Andres, Physics Career, Cosmic Ray Group
+// Author: Daniel Roberto Garcia Miranda (Dani3184)
+// Institution: Universidad Mayor de San Andrés, Physics Career, Cosmic Ray Group
 `default_nettype none
 `timescale 1ns / 1ps
 
-/* Simple testbench to instantiate the user project 
-   and dump waveform data for GTKWave.
+/* This testbench instantiates the module and makes signals accessible 
+   for the cocotb test.py.
 */
-
 module tb ();
+
+  // Dump signals for GTKWave analysis
   initial begin
     $dumpfile("tb.vcd");
     $dumpvars(0, tb);
@@ -23,10 +24,11 @@ module tb ();
   wire [7:0] uio_out;
   wire [7:0] uio_oe;
 
-  // Instantiate the project with the new module name
+  // Instantiating the Devil Nyan Cat module
   tt_um_devil_nyancat user_project (
 `ifdef GL_TEST
-      .VPWR(1'b1), .VGND(1'b0),
+      .VPWR(1'b1),
+      .VGND(1'b0),
 `endif
       .ui_in  (ui_in),
       .uo_out (uo_out),
@@ -37,4 +39,5 @@ module tb ();
       .clk    (clk),
       .rst_n  (rst_n)
   );
+
 endmodule

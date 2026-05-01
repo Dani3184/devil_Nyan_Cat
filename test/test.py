@@ -1,39 +1,47 @@
-#Author: Daniel Roberto Garcia Miranda
-#Institution: Universidad Mayor de San Andres, Physics Career, Cosmic Ray Group
+# Author: Daniel Roberto Garcia Miranda (Dani3184)
+# Institution: Universidad Mayor de San Andrés, Physics Career, Cosmic Ray Group
+
 import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles
 
 @cocotb.test()
-async def test_nyan_cat_switching(dut):
-    """Test VGA sync and mode switching between Good and Evil Cat"""
-    
-    dut._log.info("Starting simulation...")
-    
-    # Define clock: 25.175 MHz (typical VGA) is approx 39.72ns period
-    clock = Clock(dut.clk, 40, units="ns")
+async def test_project(dut):
+    dut._log.info("Starting Devil Nyan Cat Test")
+
+    # VGA Clock: ~25.175 MHz -> Period approx 39.72ns
+    clock = Clock(dut.clk, 39.72, units="ns")
     cocotb.start_soon(clock.start())
 
-    # Initial Reset Sequence
-    dut.rst_n.value = 0
-    dut.ui_in.value = 0 # Default: Good Cat mode
+    # --- Reset Sequence ---
+    dut._log.info("Resetting design...")
     dut.ena.value = 1
+    dut.ui_in.value = 0
+    dut.uio_in.value = 0
+    dut.rst_n.value = 0
     await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1
-    await ClockCycles(dut.clk, 5)
+    dut._log.info("Reset complete.")
 
-    # 1. Verify "Good Cat" operation
-    dut._log.info("Rendering Good Cat (Normal Mode)...")
-    await ClockCycles(dut.clk, 2000)
+    # --- Test Behavior ---
+    dut._log.info("Validating VGA Sync Signals")
 
-    # 2. Switch to "Evil Cat" using the control pin
-    dut._log.info("Switching to EVIL mode via ui_in[0]...")
-    dut.ui_in.value = 1 
-    await ClockCycles(dut.clk, 2000)
+    # Skip first scanline (640 active + porches + sync)
+    # 640 + 16 (front) + 96 (sync) + 48 (back) = 800 cycles per line
+    await ClockCycles(dut.clk, 800)
 
-    # 3. Check if VGA sync signals are still functional
-    # uo_out[3] is vsync, uo_out[7] is hsync (both active low, so 1 when idle)
-    assert dut.uo_out[3].value == 1, "VSync failure!"
-    assert dut.uo_out[7].value == 1, "HSync failure!"
+    # hsync (bit 7) and vsync (bit 3) are active low, so 1 means inactive (displaying)
+    assert dut.uo_out[7].value == 1, "hsync should be high during active video"
+    assert dut.uo_out[3].value == 1, "vsync should be high during first lines"
+
+    # Test hsync timing: move past active video and front porch
+    await ClockCycles(dut.clk, 640 + 16)
     
-    dut._log.info("Simulation completed successfully!")
+    # hsync should now be low (sync pulse active)
+    assert dut.uo_out[7].value == 0, "hsync pulse failed to trigger"
+
+    # Wait for the sync pulse to end (96 cycles)
+    await ClockCycles(dut.clk, 96)
+    assert dut.uo_out[7].value == 1, "hsync pulse failed to de-assert"
+
+    dut._log.info("Devil Nyan Cat verification successful!")

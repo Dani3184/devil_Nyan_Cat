@@ -1,24 +1,34 @@
-![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
+# Devil Nyan Cat Testbench
 
-# Devil Nyan Cat VGA
+This is the testbench for the `tt_um_devil_nyancat` project, developed by Daniel Roberto Garcia Miranda (Dani3184). It uses cocotb to drive the DUT and check the VGA/Audio outputs.
 
-A 1x1 tile VGA Nyan Cat with integrated sound and a toggleable "Devil Mode" (palette mutation).
+## Setting up
 
-- [Read the documentation for project](docs/info.md)
+The Makefile is already configured to point to the Devil Nyan Cat sources.
 
-![preview](docs/preview.png)
+The `tb.v` has been updated to instantiate `tt_um_devil_nyancat`.
 
-## What is Tiny Tapeout?
+## How to run
 
-Tiny Tapeout is an educational project that aims to make it easier and cheaper than ever to get your digital and analog designs manufactured on a real chip.
+To run the RTL simulation:
 
-To learn more and get started, visit https://tinytapeout.com.
 
-## Project Description
+```sh
+make -B
+```
 
-This project generates a hardware-based VGA animation of Nyan Cat. It includes a real-time color transformation engine (Devil Mode) activated via `ui_in[0]`.
+To run gatelevel simulation, first harden your project and copy `../runs/wokwi/results/final/verilog/gl/{your_module_name}.v` to `gate_level_netlist.v`.
 
-* **1x1 Tile:** Optimized to fit in a single tile.
-* **VGA Output:** 640x480 @ 60Hz.
-* **Audio:** 1-bit PWM audio synthesis.
-* **Compatibility:** Designed for TinyVGA Pmod.
+Then run:
+
+```sh
+make -B GATES=yes
+```
+
+## How to view the VCD file
+
+```sh
+gtkwave tb.vcd tb.gtkw
+```
+
+Developer: Daniel Roberto Garcia Miranda - Cosmic Rays Group (UMSA)
