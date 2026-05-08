@@ -1,6 +1,6 @@
 # Tiny Tapeout project information
 project:
-  title: "Devil Nyan Cat VGA"
+  title: "IEEE Devil Nyan Cat VGA"
   author: "Daniel García"
   discord: "dani_318"
   description: "VGA Nyan Cat with synchronized audio and a real-time color mutation toggle (Devil Mode)."
